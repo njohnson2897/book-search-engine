@@ -31,4 +31,4 @@ const typeDefs = `
         token: 
         user: User
     }
-    `
+    `;
