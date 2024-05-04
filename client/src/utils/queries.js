@@ -6,7 +6,7 @@ export const QUERY_ME = gql`
       _id
       username
       bookCount
-      savedBook
+      savedBooks
     }
   }
 `;
