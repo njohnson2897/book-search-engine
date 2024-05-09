@@ -1,4 +1,5 @@
 const jwt = require('jsonwebtoken');
+const { GraphQLError }  = require('graphql');
 
 // set token secret and expiration date
 const secret = 'mysecretsshhhhh';
@@ -13,10 +14,10 @@ module.exports = {
   }),
   // function for our authenticated routes
   // got the syntax to adapt authMiddleware from module 21 activity 25
-  authMiddleware: function (req, res, next) {
+  authMiddleware: function ({ req }) {
     // allows token to be sent via  req.query or headers
-    let token = req.query.token || req.headers.authorization;
-
+    let token = req.query.token || req.headers.authorization || req.body.token;
+    console.log(token);
     // ["Bearer", "<tokenvalue>"]
     if (req.headers.authorization) {
       token = token.split(' ').pop().trim();
@@ -30,7 +31,8 @@ module.exports = {
     try {
       const { data } = jwt.verify(token, secret, { maxAge: expiration });
       req.user = data;
-    } catch {
+    } catch(error) {
+      console.log(error);
       console.log('Invalid token');
     }
 
