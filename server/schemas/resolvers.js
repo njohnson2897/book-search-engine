@@ -31,19 +31,22 @@ const resolvers = {
       const token = signToken(user);
       return { token, user };
     },
-    saveBook: async (parent, { user, body }) => {
-      const book = await User.findOneAndUpdate(
-        { _id: user._id },
-        { $addToSet: { savedBooks: body } },
-        { new: true }
-      );
-    },
-    removeBook: async (parent, { user, params }) => {
+    saveBook: async (parent, { book }, context) => {
       const updatedUser = await User.findOneAndUpdate(
-        { _id: user._id },
-        { $pull: { savedBooks: { bookId: params.bookid } } },
+        { _id: context.user._id },
+        { $addToSet: { savedBooks: book } },
         { new: true }
       );
+      return updatedUser;
+    },
+    removeBook: async (parent, { bookId }, context) => {
+      console.log(context.user)
+      const updatedUser = await User.findOneAndUpdate(
+        { _id: context.user._id },
+        { $pull: { savedBooks: { bookId: bookId } } },
+        { new: true }
+      );
+      return updatedUser;
     },
   },
 };
